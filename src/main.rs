@@ -1,32 +1,6 @@
+mod basis;
+mod mesh;
 use nalgebra::Vector3;
-
-pub fn main() {}
-
-pub trait BasisFunction {
-    fn evaluate(&self, x: f64) -> f64;
-
-    fn gradient(&self, x: f64) -> f64;
-}
-
-fn BSpline1D(x: f64, h: f64) -> f64 {
-    if -2.0 * h <= x && x <= -h {
-        return (1. / 6.) * (x / h).powi(3) + (x / h).powi(2) + 2. * (x / h) + (4. / 3.);
-    }
-
-    if -h <= x && x <= 0. {
-        return (-1. / 2.) * (x / h).powi(3) - (x / h).powi(2) + (4. / 3.);
-    }
-
-    if 0. <= x && x <= h {
-        return (1. / 2.) * (x / h).powi(3) - (x / h).powi(2) + (4. / 3.);
-    }
-
-    if h <= x && x <= 2. * h {
-        return (-1. / 6.) * (x / h).powi(3) + (x / h).powi(2) - 2. * (x / h) + (4. / 3.);
-    }
-
-    return 0.;
-}
 
 pub struct Particle {
     position: Vector3<f64>,
@@ -34,4 +8,26 @@ pub struct Particle {
     mass: f64,
     volume: f64,
     stress: Vector3<f64>,
+}
+
+pub struct Grid {
+    dimension: isize, // Dimension of the grid
+    n: isize,         // Number of cells
+    h: f64,           // Grid spacing
+}
+
+impl Grid {
+    fn new(dimension: isize, n: isize, h: f64) -> Self {
+        Self { dimension, n, h }
+    }
+}
+
+pub fn main() {
+    let n = 3;
+    let length = 1.0;
+    let h = length / n as f64;
+    let mesh = mesh::create_2d_square_mesh(2, n, h);
+    println!("mesh: {:#?}", mesh);
+    // let ns: Vec<f64> = nodes.iter().map(|x| N(x)).collect();
+    // println!("ns: {:#?}", ns);
 }
